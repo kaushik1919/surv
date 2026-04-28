@@ -10,7 +10,7 @@ Processed video showing object tracking, overlays, and rule-based threat analysi
 
 [Download Full Video](assets/demo_video.mp4)
 
-Optional Roboflow video output, when enabled, is written to `assets/demo_video_with_violence.mp4`.
+Optional support for external Roboflow-hosted detection models through adapter-based integration.
 
 ## Visual Output
 
@@ -92,13 +92,21 @@ Outputs:
 - Event log: `assets/sample_events.jsonl`
 - Optional Roboflow overlay video: `assets/demo_video_with_violence.mp4`
 
+## Extensible Model Integration
+
+The system supports optional external inference providers through adapter-based integration. Roboflow-hosted models can be connected without modifying the core pipeline, and any compatible Roboflow project can be configured through environment variables.
+
+Example use cases include violence detection, fire detection, weapon detection, and accident detection.
+
+The adapter normalizes external predictions into the internal Detection schema. Core tracking, threat rules, and visualization remain unchanged.
+
 ## Optional Roboflow Integration
 
 Configured via `.env` and isolated from the core pipeline.
 
 ```env
 ROBOFLOW_API_KEY=your_api_key
-ROBOFLOW_PROJECT=violence-p1mqm
+ROBOFLOW_PROJECT=your-project-name
 ROBOFLOW_VERSION=1
 USE_ROBOFLOW_VIDEO=true
 ```

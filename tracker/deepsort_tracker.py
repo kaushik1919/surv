@@ -3,10 +3,10 @@ from surveillance.interfaces import BaseTracker
 
 
 class DeepSortTracker(BaseTracker):
-    def __init__(self):
+    def __init__(self, max_age=30, n_init=3):
         from deep_sort_realtime.deepsort_tracker import DeepSort
 
-        self.tracker = DeepSort()
+        self.tracker = DeepSort(max_age=max_age, n_init=n_init)
 
     def update(self, frame, detections):
         tracker_inputs = [

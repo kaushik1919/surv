@@ -4,9 +4,9 @@ Deterministic pipeline for object detection, multi-object tracking, and rule-bas
 
 ## Demo
 
-<video src="assets/demo_video.mp4" controls></video>
+![Demo](assets/demo.gif)
 
-Video processed through detection, tracking, and rule-based threat analysis.
+[Download full video](assets/demo_video.mp4)
 
 ## Visual Output
 

@@ -10,6 +10,8 @@ class Settings:
     loitering_seconds: float = 30.0
     frame_width: int = 640
     frame_skip: int = 0
+    tracker_max_age: int = 30
+    tracker_n_init: int = 3
     display: bool = True
     weapon_labels: FrozenSet[str] = field(
         default_factory=lambda: frozenset({"knife", "gun", "weapon"})

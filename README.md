@@ -1,126 +1,108 @@
 # Real-Time Surveillance and Threat Detection System
 
-## Overview
-
-This project is a modular Python surveillance system for real-time object detection, tracking, and threat-event generation. The core is adapter-first: tests exercise deterministic domain logic and pipeline flow with fakes, while YOLOv8 and DeepSORT are isolated behind runtime adapters.
-
-## Features
-
-- Explicit domain models for detections, tracks, and threat events.
-- Dependency-injected detector, tracker, and alert manager interfaces.
-- `SurveillancePipeline.process(frame)` returning tracks and threat events.
-- Stateful threat handling with deterministic loitering detection.
-- Weapon-label threat events.
-- Console and in-memory alert manager.
-- Import-safe YOLOv8 and DeepSORT adapter shells.
-- Guarded drawing utilities that do not require OpenCV for local validation.
-- Runtime webcam and video-file input through OpenCV.
-- Frame resizing and optional frame skipping controls.
-
-## Architecture Diagram
-
-```text
-frame
-  -> detector
-  -> tracker
-  -> threat_engine
-  -> alert_manager
-  -> drawing
-  -> output
-```
-
-## Tech Stack
-
-- Python 3.13
-- pytest
-- flake8
-- numpy
-- Optional runtime: Ultralytics YOLOv8, DeepSORT, OpenCV
-
-## Setup Instructions
-
-Install lightweight validation dependencies:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-Run local checks:
-
-```bash
-flake8 .
-pytest
-```
-
-Install runtime dependencies only when running real video/model adapters:
-
-```bash
-python -m pip install -r requirements-runtime.txt
-```
+Deterministic real-time pipeline for object detection, tracking, and threat analysis with reproducible outputs.
 
 ## Demo
 
-The current core is local-validation safe and fake-driven. Runtime video execution will be expanded after the core contracts are stable.
+<video src="assets/demo.mp4" controls></video>
 
-Example CLI shape:
+Live run showing tracking IDs, threat detection, and restricted zone behavior.
 
-```bash
-python main.py --source 0 --model yolov8n.pt --confidence 0.25 --frame-width 640 --frame-skip 0
-python main.py --source sample.mp4 --model yolov8n.pt --no-display
-```
+## Visual Output
 
-## Local Validation
+![Persistent tracking with stable IDs](assets/tracking.png)
 
-Validation is local-only at this stage. Install `requirements.txt`, run `flake8 .`, then run `pytest`. The validation flow does not download models, access cameras, call external services, or require GPU support.
+Persistent tracking with stable IDs.
 
-## Future Improvements
+![High-threat detection rendered in red](assets/weapon.png)
 
-- Add full OpenCV video capture and output loop.
-- Add integration tests for YOLOv8 and DeepSORT in an opt-in workflow.
-- Add restricted-zone threat rules.
-- Add optional webhook, email, and sound alert adapters.
-- Add demo video assets and benchmark FPS reporting.
+High-threat detection rendered in red.
 
-## Threat Enhancements (v0.3)
+![Restricted zone overlay with entry and presence behavior](assets/zone.png)
 
-This release adds deterministic, movement-aware loitering detection, rectangular
-restricted-zone handling (entry and sustained-presence), and per-event
-deduplication to reduce alert spam.
+Restricted zone overlay with entry and presence behavior.
 
-- Movement-aware loitering: a track must exceed the configured time threshold
-  and remain below a configurable pixel movement threshold (based on recent
-  position history) to generate a `loitering` event.
-- Restricted zones: rectangular zones from `config.Settings.restricted_zones`
-  produce immediate `zone_entry` events on entry and `zone_presence` events
-  when a track remains inside for the configured duration.
-- Deduplication and resets: events are deduplicated per `(track_id, event_type)`;
-  they are reset when the track disappears, leaves a zone, resumes movement,
-  or its label changes.
+## Key Features
 
-These features are deterministic (use the injected time provider) and test-driven
-—see `tests/test_threat_rules.py` for the behavior-driven test suite.
+- YOLOv8-based object detection
+- DeepSORT-based identity tracking
+- Deterministic threat engine for loitering and zones
+- Optional runtime visualization
+- JSONL event logging
+
+## Why This Project Is Different
+
+- Deterministic core that is testable without models
+- Import-safe runtime adapters
+- Clean modular pipeline design
+
+## Architecture
+
+Video -> Detection -> Tracking -> Threat Engine -> Alerts -> Visualization
 
 ## Visualization
 
-- Threat-level color overlays for HIGH, MEDIUM, and LOW events.
-- Track labels with ID, class, and threat level.
-- Restricted zone rendering.
-- Optional track trails.
+- Color-coded threat levels
+- Labeled tracks
+- Zone overlays
+- Optional trails
 
 ## Event Logging
 
-- JSONL format, one event per line.
-- Fields: `timestamp`, `event_id`, `track_id`, `label`, `level`, `reason`, `bbox`.
-- Optional and disabled by default.
+Event logging uses JSON Lines, with one event per line and a fixed schema:
 
-## Runtime Usage
+- `timestamp`
+- `event_id`
+- `track_id`
+- `label`
+- `level`
+- `reason`
+- `bbox`
+
+Example lines from `assets/sample_events.jsonl`:
+
+```json
+{"bbox": [115, 280, 225, 440], "event_id": "loitering-1-30.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 30.0, "track_id": 1}
+{"bbox": [527, 216, 627, 356], "event_id": "zone-entry-2-0-86.0", "label": "zone_entry", "level": "high", "reason": "track entered restricted zone 0", "timestamp": 86.0, "track_id": 2}
+```
+
+## Reproducible Demo
+
+Regenerate the demo outputs with:
 
 ```bash
-python -m pip install -r requirements-runtime.txt
+python scripts/generate_demo_assets.py
+```
+
+This regenerates:
+- `assets/demo.mp4`
+- `assets/tracking.png`
+- `assets/weapon.png`
+- `assets/zone.png`
+- `assets/sample_events.jsonl`
+
+No manual setup is required beyond the runtime dependencies.
+
+## Quick Start
+
+Local validation:
+
+```bash
+pip install -r requirements.txt
+pytest
+```
+
+Runtime:
+
+```bash
+pip install -r requirements-runtime.txt
 python main.py --source 0
 ```
 
-### Demo Note
+## Future Improvements
 
-- Webcam demo: `python main.py --source 0`
-- Optional logging: enable `log_events` and set `event_log_path` in `Settings`
+- Add a short screen-capture preview alongside the MP4 demo
+- Refine overlay typography and zone labeling
+- Add additional export formats for event logs
+- Add optional alert delivery integrations
+- Add benchmark reporting for runtime throughput

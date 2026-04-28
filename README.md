@@ -119,3 +119,8 @@ These features are deterministic (use the injected time provider) and test-drive
 python -m pip install -r requirements-runtime.txt
 python main.py --source 0
 ```
+
+### Demo Note
+
+- Webcam demo: `python main.py --source 0`
+- Optional logging: enable `log_events` and set `event_log_path` in `Settings`

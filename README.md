@@ -96,3 +96,22 @@ python main.py --source 0
 - The system reports only actual detections and events recorded during the run.
 - Optional offline violence detection using Roboflow video inference (enabled via `.env`).
 
+## Optional Roboflow Configuration
+
+Create a `.env` file in the project root:
+
+```env
+ROBOFLOW_API_KEY=your_api_key
+ROBOFLOW_PROJECT=violence-p1mqm
+ROBOFLOW_VERSION=1
+USE_ROBOFLOW_VIDEO=true
+```
+
+`USE_ROBOFLOW_VIDEO=false` disables the feature cleanly. When enabled, the system can generate `assets/demo_video_with_violence.mp4`.
+
+Runtime example:
+
+```bash
+python scripts/generate_demo_assets.py
+```
+

@@ -99,3 +99,23 @@ deduplication to reduce alert spam.
 
 These features are deterministic (use the injected time provider) and test-driven
 —see `tests/test_threat_rules.py` for the behavior-driven test suite.
+
+## Visualization
+
+- Threat-level color overlays for HIGH, MEDIUM, and LOW events.
+- Track labels with ID, class, and threat level.
+- Restricted zone rendering.
+- Optional track trails.
+
+## Event Logging
+
+- JSONL format, one event per line.
+- Fields: `timestamp`, `event_id`, `track_id`, `label`, `level`, `reason`, `bbox`.
+- Optional and disabled by default.
+
+## Runtime Usage
+
+```bash
+python -m pip install -r requirements-runtime.txt
+python main.py --source 0
+```

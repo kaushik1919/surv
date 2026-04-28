@@ -1,7 +1,5 @@
 # Real-Time Surveillance and Threat Detection System
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/kaushik1919/surv/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/kaushik1919/surv/tree/main)
-
 ## Overview
 
 This project is a modular Python surveillance system for real-time object detection, tracking, and threat-event generation. The core is adapter-first: tests exercise deterministic domain logic and pipeline flow with fakes, while YOLOv8 and DeepSORT are isolated behind runtime adapters.
@@ -15,7 +13,7 @@ This project is a modular Python surveillance system for real-time object detect
 - Weapon-label threat events.
 - Console and in-memory alert manager.
 - Import-safe YOLOv8 and DeepSORT adapter shells.
-- Guarded drawing utilities that do not require OpenCV in CI.
+- Guarded drawing utilities that do not require OpenCV for local validation.
 
 ## Architecture Diagram
 
@@ -36,11 +34,10 @@ frame
 - flake8
 - numpy
 - Optional runtime: Ultralytics YOLOv8, DeepSORT, OpenCV
-- CircleCI
 
 ## Setup Instructions
 
-Install CI-safe dependencies:
+Install lightweight validation dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
@@ -61,7 +58,7 @@ python -m pip install -r requirements-runtime.txt
 
 ## Demo
 
-The current core is CI-safe and fake-driven. Runtime video execution will be expanded after the core contracts are stable.
+The current core is local-validation safe and fake-driven. Runtime video execution will be expanded after the core contracts are stable.
 
 Example CLI shape:
 
@@ -69,9 +66,9 @@ Example CLI shape:
 python main.py --source 0 --model yolov8n.pt --confidence 0.25
 ```
 
-## CI
+## Local Validation
 
-CircleCI installs only `requirements.txt`, runs `flake8 .`, then runs `pytest`. It does not download models, access cameras, call external services, or require GPU support.
+Validation is local-only at this stage. Install `requirements.txt`, run `flake8 .`, then run `pytest`. The validation flow does not download models, access cameras, call external services, or require GPU support.
 
 ## Future Improvements
 

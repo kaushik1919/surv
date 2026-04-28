@@ -1,12 +1,13 @@
 import argparse
 
 from alerts.alert_manager import AlertManager
+from event_logging.event_logger import FileEventLogger
 from config.settings import Settings
 from detector.yolo import YOLODetector
 from pipeline.pipeline import SurveillancePipeline
 from threats.rules import ThreatEngine
 from tracker.deepsort_tracker import DeepSortTracker
-from utils.drawing import draw_tracks
+from utils.visualization import Visualizer
 
 
 def build_parser():
@@ -65,6 +66,10 @@ def settings_from_args(args):
         tracker_max_age=defaults.tracker_max_age,
         tracker_n_init=defaults.tracker_n_init,
         display=not args.no_display,
+        visualization_enabled=defaults.visualization_enabled,
+        log_events=defaults.log_events,
+        event_log_path=defaults.event_log_path,
+        trail_length=defaults.trail_length,
         weapon_labels=defaults.weapon_labels,
         restricted_zones=defaults.restricted_zones,
     )
@@ -122,6 +127,12 @@ def run_video_loop(settings, pipeline=None):
 
     capture = open_video_source(settings)
     runtime_pipeline = pipeline or build_runtime_pipeline(settings)
+    visualizer = Visualizer() if settings.visualization_enabled else None
+    event_logger = (
+        FileEventLogger(settings.event_log_path)
+        if settings.log_events
+        else None
+    )
     frame_index = 0
 
     while capture.isOpened():
@@ -135,7 +146,13 @@ def run_video_loop(settings, pipeline=None):
 
         frame = resize_frame(frame, settings.frame_width)
         result = runtime_pipeline.process(frame)
-        output = draw_tracks(frame, result.tracks, result.events)
+        if event_logger is not None:
+            for event in result.events:
+                event_logger.log(event)
+
+        output = frame
+        if visualizer is not None:
+            output = visualizer.draw(frame, result.tracks, result.events, settings)
 
         if settings.display:
             cv2.imshow("Surveillance", output)
@@ -145,6 +162,8 @@ def run_video_loop(settings, pipeline=None):
         frame_index += 1
 
     capture.release()
+    if event_logger is not None:
+        event_logger.flush()
     if settings.display:
         cv2.destroyAllWindows()
 

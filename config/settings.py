@@ -13,6 +13,10 @@ class Settings:
     tracker_max_age: int = 30
     tracker_n_init: int = 3
     display: bool = True
+    visualization_enabled: bool = True
+    log_events: bool = False
+    event_log_path: str = "events.jsonl"
+    trail_length: int = 10
     weapon_labels: FrozenSet[str] = field(
         default_factory=lambda: frozenset({"knife", "gun", "weapon"})
     )

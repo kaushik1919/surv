@@ -1,65 +1,57 @@
 # Real-Time Surveillance and Threat Detection System
 
-Deterministic real-time pipeline for object detection, tracking, and threat analysis with reproducible outputs.
+Deterministic pipeline for object detection, multi-object tracking, and rule-based threat analysis. The repository includes a runtime mode that optionally renders visualization overlays and writes JSONL event logs.
 
 ## Demo
 
 <video src="assets/demo.mp4" controls></video>
 
-Live run showing tracking IDs, threat detection, and restricted zone behavior.
+Video processed through detection, tracking, and rule-based threat analysis.
 
 ## Visual Output
 
-![Persistent tracking with stable IDs](assets/tracking.png)
+![Object tracking with persistent IDs](assets/tracking.png)
 
-Persistent tracking with stable IDs.
+Caption: Object tracking with persistent IDs
 
-![High-threat detection rendered in red](assets/weapon.png)
+![Zone monitoring frame](assets/zone.png)
 
-High-threat detection rendered in red.
+Caption: Zone-based monitoring (if visible)
 
-![Restricted zone overlay with entry and presence behavior](assets/zone.png)
+![Alert or annotated detection frame](assets/alert.png)
 
-Restricted zone overlay with entry and presence behavior.
+Caption: Example alert or annotated detection frame
 
 ## Key Features
 
-- YOLOv8-based object detection
-- DeepSORT-based identity tracking
-- Deterministic threat engine for loitering and zones
-- Optional runtime visualization
-- JSONL event logging
+- Real-time object detection (YOLOv8)
+- Multi-object tracking (DeepSORT)
+- Rule-based threat detection (loitering, zones)
+- Visualization overlays and JSONL event logging
 
 ## Why This Project Is Different
 
-- Deterministic core that is testable without models
-- Import-safe runtime adapters
-- Clean modular pipeline design
+- Deterministic core logic (fully testable)
+- Import-safe architecture (models & heavy deps loaded at runtime)
+- Modular pipeline design for easy adapters and testing
 
 ## Architecture
 
-Video -> Detection -> Tracking -> Threat Engine -> Alerts -> Visualization
-
-## Visualization
-
-- Color-coded threat levels
-- Labeled tracks
-- Zone overlays
-- Optional trails
+Video → Detection → Tracking → Threat Engine → Alerts → Visualization
 
 ## Event Logging
 
-Event logging uses JSON Lines, with one event per line and a fixed schema:
+Events are written as JSON Lines (one JSON object per line). Each event uses the following fields:
 
-- `timestamp`
-- `event_id`
-- `track_id`
-- `label`
-- `level`
-- `reason`
-- `bbox`
+- `timestamp` — seconds since start
+- `event_id` — unique event identifier
+- `track_id` — numeric track identifier assigned by the tracker
+- `label` — event label (e.g. `loitering`, `zone_entry`, `weapon`)
+- `level` — event severity (e.g. `medium`, `high`, `critical`)
+- `reason` — short human-readable explanation
+- `bbox` — bounding box `[x1, y1, x2, y2]`
 
-Example lines from `assets/sample_events.jsonl`:
+Example lines from `assets/sample_events.jsonl` (real output):
 
 ```json
 {"bbox": [115, 280, 225, 440], "event_id": "loitering-1-30.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 30.0, "track_id": 1}
@@ -68,41 +60,38 @@ Example lines from `assets/sample_events.jsonl`:
 
 ## Reproducible Demo
 
-Regenerate the demo outputs with:
+To process a video and produce the annotated outputs used above:
 
 ```bash
-python scripts/generate_demo_assets.py
+python main.py --source assets/input_video.mp4
 ```
 
-This regenerates:
-- `assets/demo.mp4`
-- `assets/tracking.png`
-- `assets/weapon.png`
-- `assets/zone.png`
-- `assets/sample_events.jsonl`
+This run will (depending on `config.settings`) render overlays and write:
 
-No manual setup is required beyond the runtime dependencies.
+- `assets/demo.mp4` — annotated video
+- `assets/tracking.png` — tracking screenshot
+- `assets/zone.png` — zone screenshot
+- `assets/alert.png` — example alert frame
+- `assets/sample_events.jsonl` — event log (JSONL)
 
 ## Quick Start
 
-Local validation:
+Install test deps and run unit tests:
 
 ```bash
 pip install -r requirements.txt
 pytest
 ```
 
-Runtime:
+Install runtime dependencies and run on a camera:
 
 ```bash
 pip install -r requirements-runtime.txt
 python main.py --source 0
 ```
 
-## Future Improvements
+## Notes
 
-- Add a short screen-capture preview alongside the MP4 demo
-- Refine overlay typography and zone labeling
-- Add additional export formats for event logs
-- Add optional alert delivery integrations
-- Add benchmark reporting for runtime throughput
+- The README and demo use only generated assets from the `assets/` folder.
+- The system reports only actual detections and events recorded during the run.
+

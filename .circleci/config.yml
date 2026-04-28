@@ -1,0 +1,22 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/python:3.13
+    steps:
+      - checkout
+      - run:
+          name: Install lightweight CI dependencies
+          command: python -m pip install -r requirements.txt
+      - run:
+          name: Lint
+          command: flake8 .
+      - run:
+          name: Test
+          command: pytest
+
+workflows:
+  ci:
+    jobs:
+      - test

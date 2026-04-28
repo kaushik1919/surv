@@ -18,7 +18,10 @@ def test_pipeline_returns_tracks_and_events_from_injected_components():
     detector = FakeDetector([detection])
     tracker = FakeTracker([track])
     alerts = FakeAlertManager()
-    threat_engine = lambda tracks, detections: [event]
+
+    def threat_engine(tracks, detections):
+        return [event]
+
     pipeline = SurveillancePipeline(detector, tracker, threat_engine, alerts)
 
     result = pipeline.process(frame=object())

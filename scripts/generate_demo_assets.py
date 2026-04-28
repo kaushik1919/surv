@@ -330,6 +330,30 @@ def maybe_create_gif(mp4_path: Path, gif_path: Path):
     )
 
 
+def maybe_create_roboflow_overlay(assets_path: Path):
+    demo_video = assets_path / "demo_video.mp4"
+    if not demo_video.exists():
+        return None
+
+    try:
+        from utils.roboflow_video import (  # noqa: E402
+            overlay_roboflow_results,
+            parse_roboflow_results,
+            run_roboflow_video_inference,
+        )
+    except Exception:
+        return None
+
+    results = run_roboflow_video_inference(str(demo_video))
+    if not results:
+        return None
+
+    parsed = parse_roboflow_results(results)
+    output_path = assets_path / "demo_video_with_violence.mp4"
+    overlay_roboflow_results(str(demo_video), parsed, str(output_path))
+    return output_path
+
+
 def generate_assets(frame_count=FRAME_COUNT, fps=DEFAULT_FPS, assets_dir=None):
     import cv2
 
@@ -431,6 +455,7 @@ def generate_assets(frame_count=FRAME_COUNT, fps=DEFAULT_FPS, assets_dir=None):
         cv2.imwrite(str(assets_path / "weapon.png"), output)
 
     maybe_create_gif(video_path, assets_path / "demo.gif")
+    maybe_create_roboflow_overlay(assets_path)
     return {
         "assets_dir": assets_path,
         "mode": runtime_mode,

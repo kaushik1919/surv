@@ -94,4 +94,5 @@ python main.py --source 0
 
 - The README and demo use only generated assets from the `assets/` folder.
 - The system reports only actual detections and events recorded during the run.
+- Optional offline violence detection using Roboflow video inference (enabled via `.env`).
 

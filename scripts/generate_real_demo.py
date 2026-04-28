@@ -15,6 +15,11 @@ from config.settings import Settings
 from main import build_runtime_pipeline
 from utils.visualization import Visualizer
 from event_logging.event_logger import FileEventLogger
+from utils.roboflow_video import (  # noqa: E402
+    overlay_roboflow_results,
+    parse_roboflow_results,
+    run_roboflow_video_inference,
+)
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 ASSETS = os.path.join(ROOT, "assets")
@@ -80,6 +85,17 @@ def run_pipeline_and_write_video():
     # replace demo video with the new one
     os.replace(tmp_out, DEMO_VIDEO)
     print("Wrote demo video:", DEMO_VIDEO)
+
+    results = run_roboflow_video_inference(str(DEMO_VIDEO))
+    if results:
+        parsed = parse_roboflow_results(results)
+        violence_video = os.path.join(ASSETS, "demo_video_with_violence.mp4")
+        overlay_roboflow_results(
+            str(DEMO_VIDEO),
+            parsed,
+            violence_video,
+        )
+        print("Wrote Roboflow overlay video:", violence_video)
 
 
 def extract_screenshots_from_demo():

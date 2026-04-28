@@ -80,3 +80,22 @@ Validation is local-only at this stage. Install `requirements.txt`, run `flake8 
 - Add restricted-zone threat rules.
 - Add optional webhook, email, and sound alert adapters.
 - Add demo video assets and benchmark FPS reporting.
+
+## Threat Enhancements (v0.3)
+
+This release adds deterministic, movement-aware loitering detection, rectangular
+restricted-zone handling (entry and sustained-presence), and per-event
+deduplication to reduce alert spam.
+
+- Movement-aware loitering: a track must exceed the configured time threshold
+  and remain below a configurable pixel movement threshold (based on recent
+  position history) to generate a `loitering` event.
+- Restricted zones: rectangular zones from `config.Settings.restricted_zones`
+  produce immediate `zone_entry` events on entry and `zone_presence` events
+  when a track remains inside for the configured duration.
+- Deduplication and resets: events are deduplicated per `(track_id, event_type)`;
+  they are reset when the track disappears, leaves a zone, resumes movement,
+  or its label changes.
+
+These features are deterministic (use the injected time provider) and test-driven
+—see `tests/test_threat_rules.py` for the behavior-driven test suite.

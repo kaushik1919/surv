@@ -10,7 +10,11 @@ class YOLODetector(BaseDetector):
         self.confidence_threshold = confidence_threshold
 
     def detect(self, frame):
-        results = self.model(frame)
+        results = self.model.predict(
+            frame,
+            conf=self.confidence_threshold,
+            verbose=False,
+        )
         detections = []
         for result in results:
             names = result.names

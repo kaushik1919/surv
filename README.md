@@ -14,6 +14,8 @@ This project is a modular Python surveillance system for real-time object detect
 - Console and in-memory alert manager.
 - Import-safe YOLOv8 and DeepSORT adapter shells.
 - Guarded drawing utilities that do not require OpenCV for local validation.
+- Runtime webcam and video-file input through OpenCV.
+- Frame resizing and optional frame skipping controls.
 
 ## Architecture Diagram
 
@@ -63,7 +65,8 @@ The current core is local-validation safe and fake-driven. Runtime video executi
 Example CLI shape:
 
 ```bash
-python main.py --source 0 --model yolov8n.pt --confidence 0.25
+python main.py --source 0 --model yolov8n.pt --confidence 0.25 --frame-width 640 --frame-skip 0
+python main.py --source sample.mp4 --model yolov8n.pt --no-display
 ```
 
 ## Local Validation

@@ -1,0 +1,1 @@
+"""Detection adapter package."""

@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the CI-safe surveillance core with explicit domain models, base interfaces, fake-driven pipeline tests, deterministic threat rules, alert storage, guarded drawing, and import-safe adapters.
+**Goal:** Build the local-validation-safe surveillance core with explicit domain models, base interfaces, fake-driven pipeline tests, deterministic threat rules, alert storage, guarded drawing, and import-safe adapters.
 
-**Architecture:** The core uses dependency injection and normalized domain models. `SurveillancePipeline` orchestrates frame processing while detector, tracker, alert, and drawing implementations remain swappable. Heavy runtime dependencies are isolated to adapter methods or constructors and are not required in CI.
+**Architecture:** The core uses dependency injection and normalized domain models. `SurveillancePipeline` orchestrates frame processing while detector, tracker, alert, and drawing implementations remain swappable. Heavy runtime dependencies are isolated to adapter methods or constructors and are not required for local validation.
 
 **Tech Stack:** Python 3, dataclasses, typing protocols/ABCs, pytest, flake8, numpy, optional OpenCV/Ultralytics/DeepSORT runtime packages.
 
@@ -23,8 +23,7 @@
 - `config/settings.py`: default runtime settings.
 - `main.py`: thin CLI entrypoint.
 - `tests/helpers/fakes.py`: reusable `FakeDetector`, `FakeTracker`, `FakeAlertManager`.
-- `.circleci/config.yml`: CI install, lint, tests.
-- `requirements.txt`: lightweight CI dependencies only.
+- `requirements.txt`: lightweight local validation dependencies only.
 - `requirements-runtime.txt`: heavy runtime dependencies.
 - `README.md`: professional evolving project documentation.
 
@@ -289,7 +288,7 @@ Run: `pytest tests/test_alert_manager.py tests/test_import_safety.py -v`
 Expected: PASS.
 Commit: `feat: add alert manager and import-safe runtime boundaries`
 
-## Task 5: Config, Main Entrypoint, CI, README
+## Task 5: Config, Main Entrypoint, Local Validation, README
 
 **Files:**
 - Create: `config/settings.py`
@@ -298,7 +297,6 @@ Commit: `feat: add alert manager and import-safe runtime boundaries`
 - Create: `requirements.txt`
 - Create: `requirements-runtime.txt`
 - Create: `.flake8`
-- Create: `.circleci/config.yml`
 - Create: `README.md`
 - Test: `tests/test_main_imports.py`
 
@@ -326,9 +324,9 @@ def test_settings_include_ci_safe_defaults():
 Run: `pytest tests/test_main_imports.py -v`
 Expected: FAIL because settings and main are missing.
 
-- [ ] **Step 3: Implement thin main, settings, CI, README, and requirements**
+- [ ] **Step 3: Implement thin main, settings, local validation docs, README, and requirements**
 
-`main.py` parses CLI overrides only and defers runtime construction until `main()` is called. CI installs only `requirements.txt`.
+`main.py` parses CLI overrides only and defers runtime construction until `main()` is called. Local validation installs only `requirements.txt`.
 
 - [ ] **Step 4: Run full local verification and commit**
 
@@ -336,13 +334,14 @@ Run: `python -m pip install -r requirements.txt`
 Run: `flake8 .`
 Run: `pytest`
 Expected: all pass.
-Commit: `chore: add ci and project documentation`
+Commit: `chore: add local validation and project documentation`
 
-## Push And CI Loop
+## Push And Local Validation Loop
 
 After each commit:
 
 - [ ] Push the feature branch to `https://github.com/kaushik1919/surv.git`.
-- [ ] Check CircleCI pipeline status for the pushed commit.
-- [ ] If CircleCI fails, diagnose the job, fix with TDD or config validation, rerun local checks, commit, push, and re-check.
+- [ ] Run `python -m flake8 .`.
+- [ ] Run `python -m pytest -v`.
+- [ ] If local validation fails, diagnose the issue, fix with TDD or config validation, rerun local checks, commit, push, and re-check.
 

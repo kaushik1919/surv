@@ -1,0 +1,16 @@
+{"bbox": [115, 280, 225, 440], "event_id": "loitering-1-30.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 30.0, "track_id": 1}
+{"bbox": [527, 216, 627, 356], "event_id": "zone-entry-2-0-86.0", "label": "zone_entry", "level": "high", "reason": "track entered restricted zone 0", "timestamp": 86.0, "track_id": 2}
+{"bbox": [763, 216, 863, 356], "event_id": "zone-presence-2-0-116.0", "label": "zone_presence", "level": "high", "reason": "track remained in restricted zone 0 for 30.0s", "timestamp": 116.0, "track_id": 2}
+{"bbox": [763, 216, 863, 356], "event_id": "loitering-2-140.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 140.0, "track_id": 2}
+{"bbox": [153, 86, 233, 196], "event_id": "weapon-3-150.0", "label": "weapon", "level": "critical", "reason": "weapon label detected", "timestamp": 150.0, "track_id": 3}
+{"bbox": [115, 280, 225, 440], "event_id": "loitering-1-30.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 30.0, "track_id": 1}
+{"bbox": [527, 216, 627, 356], "event_id": "zone-entry-2-0-86.0", "label": "zone_entry", "level": "high", "reason": "track entered restricted zone 0", "timestamp": 86.0, "track_id": 2}
+{"bbox": [763, 216, 863, 356], "event_id": "zone-presence-2-0-116.0", "label": "zone_presence", "level": "high", "reason": "track remained in restricted zone 0 for 30.0s", "timestamp": 116.0, "track_id": 2}
+{"bbox": [763, 216, 863, 356], "event_id": "loitering-2-140.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 140.0, "track_id": 2}
+{"bbox": [153, 86, 233, 196], "event_id": "weapon-3-150.0", "label": "weapon", "level": "critical", "reason": "weapon label detected", "timestamp": 150.0, "track_id": 3}
+{"bbox": [115, 280, 225, 440], "event_id": "loitering-1-30.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 30.0, "track_id": 1}
+{"bbox": [527, 216, 627, 356], "event_id": "zone-entry-2-0-86.0", "label": "zone_entry", "level": "high", "reason": "track entered restricted zone 0", "timestamp": 86.0, "track_id": 2}
+{"bbox": [763, 216, 863, 356], "event_id": "zone-presence-2-0-116.0", "label": "zone_presence", "level": "high", "reason": "track remained in restricted zone 0 for 30.0s", "timestamp": 116.0, "track_id": 2}
+{"bbox": [763, 216, 863, 356], "event_id": "loitering-2-140.0", "label": "loitering", "level": "medium", "reason": "track observed for 30.0s; movement=0.0px", "timestamp": 140.0, "track_id": 2}
+{"bbox": [153, 86, 233, 196], "event_id": "weapon-3-150.0", "label": "weapon", "level": "critical", "reason": "weapon label detected", "timestamp": 150.0, "track_id": 3}
+{"bbox": [0, 0, 0, 0], "event_id": "loitering-63-195982.9677056", "label": "loitering", "level": "medium", "reason": "track observed for 30.1s; movement=0.3px", "timestamp": 195982.9677056, "track_id": 63}

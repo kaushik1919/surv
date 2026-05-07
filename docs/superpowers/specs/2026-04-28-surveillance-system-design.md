@@ -2,9 +2,9 @@
 
 ## Overview
 
-Build a production-grade Python surveillance system using an adapter-first modular core. The system will process video frames through object detection, tracking, threat rules, alerting, visualization, and output while keeping the core deterministic and safe for CI.
+Build a production-grade Python surveillance system using an adapter-first modular core. The system will process video frames through object detection, tracking, threat rules, alerting, visualization, and output while keeping the core deterministic and safe for local validation.
 
-The first version prioritizes offline/demo reliability. CI will validate domain logic and pipeline behavior without requiring YOLOv8, DeepSORT, camera access, GPU, model downloads, network calls, or external services. Runtime adapters will support real YOLOv8 and DeepSORT integrations behind strict boundaries.
+The first version prioritizes offline/demo reliability. Local validation will cover domain logic and pipeline behavior without requiring YOLOv8, DeepSORT, camera access, GPU, model downloads, network calls, or external services. Runtime adapters will support real YOLOv8 and DeepSORT integrations behind strict boundaries.
 
 ## Goals
 
@@ -16,15 +16,15 @@ The first version prioritizes offline/demo reliability. CI will validate domain 
 - Emit console alerts and store in-memory alert events.
 - Draw labels, bounding boxes, track IDs, and threat state overlays.
 - Keep `main.py` as a thin runtime entrypoint.
-- Keep CircleCI fast, deterministic, and free of heavy runtime dependencies.
+- Keep local validation fast, deterministic, and free of heavy runtime dependencies.
 - Maintain a professional README as features land.
 
 ## Non-Goals For V1
 
 - No active webhook, email, or sound delivery.
 - No trained suspicious-activity behavior model.
-- No model download or GPU validation in CI.
-- No CI tests that instantiate YOLOv8 or DeepSORT backends.
+- No model download or GPU validation in local tests.
+- No local tests that instantiate YOLOv8 or DeepSORT backends.
 - No direct dependency on live video devices in tests.
 
 ## Project Structure
@@ -51,8 +51,6 @@ surveillance-system/
 +-- requirements.txt
 +-- requirements-runtime.txt
 +-- README.md
-+-- .circleci/
-    +-- config.yml
 ```
 
 ## Domain Models
@@ -145,7 +143,7 @@ The design will leave an adapter interface for webhook, email, and sound deliver
 
 ## Requirements Split
 
-`requirements.txt` will contain only lightweight CI dependencies:
+`requirements.txt` will contain only lightweight local validation dependencies:
 
 - `pytest`
 - `flake8`
@@ -157,7 +155,7 @@ The design will leave an adapter interface for webhook, email, and sound deliver
 - DeepSORT implementation package
 - `opencv-python`
 
-CircleCI will install only `requirements.txt`.
+Local validation will install only `requirements.txt`.
 
 ## Testing Strategy
 
@@ -170,7 +168,7 @@ Layers:
 - Pipeline: tests only with fake components.
 - Alert manager: tests for console-safe event creation and in-memory storage.
 - Drawing: minimal optional tests, guarded or skipped gracefully when OpenCV is absent.
-- Runtime adapters: import-safety checks only in CI; deeper validation deferred to manual or later integration tests.
+- Runtime adapters: import-safety checks only in local tests; deeper validation deferred to manual or later integration tests.
 
 Reusable test fakes will live under `tests/helpers`:
 
@@ -178,11 +176,11 @@ Reusable test fakes will live under `tests/helpers`:
 - `FakeTracker`
 - `FakeAlertManager`
 
-No CI test may require real video frames, camera devices, network access, GPU checks, model downloads, YOLOv8 instantiation, or DeepSORT instantiation.
+No local test may require real video frames, camera devices, network access, GPU checks, model downloads, YOLOv8 instantiation, or DeepSORT instantiation.
 
-## CircleCI
+## Local Validation
 
-CircleCI will run a fast Python workflow:
+Local validation will run a fast Python workflow:
 
 ```text
 python -m pip install -r requirements.txt
@@ -194,7 +192,7 @@ Acceptance criteria:
 
 - `flake8` passes with no warnings or an explicit project config.
 - `pytest` runs in a few seconds.
-- No CI step downloads models or contacts external services.
+- No validation step downloads models or contacts external services.
 - The project can be imported without runtime-only dependencies installed.
 
 ## README Evolution
@@ -215,7 +213,7 @@ Required README sections:
 - Tech stack.
 - Setup instructions.
 - Demo section with sample commands and notes for adding video assets.
-- CI badge.
+- Local validation instructions.
 - Future improvements.
 
 ## Implementation Order
@@ -228,8 +226,8 @@ Required README sections:
 6. Implement light drawing helpers.
 7. Implement thin `main.py`.
 8. Add YOLOv8 and DeepSORT adapters last, with import-safe boundaries.
-9. Update README and CircleCI as each major feature lands.
+9. Update README and local validation guidance as each major feature lands.
 
 ## Branching And CI Discipline
 
-Development will use feature branches. Main must not receive direct commits. Each feature branch will keep commits small and meaningful. Before any push, local lint and tests must pass. After each push, CircleCI pipeline status must be checked and failures diagnosed before continuing.
+Development will use feature branches. Main must not receive direct commits. Each feature branch will keep commits small and meaningful. Before any push, local lint and tests must pass. External CI is not part of this stage.
